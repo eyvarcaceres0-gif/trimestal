@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>La Sonrisa Store — Productos Dentales</title>
+  <style>
+    :root{
+      --bg1: linear-gradient(135deg,#89f7fe 0%,#66a6ff 50%,#9b67ff 100%);
+      --card-grad: linear-gradient(135deg,#ffffffaa, #ffffff66);
+      --accent: #ff6b6b;
+      --glass: rgba(255,255,255,0.12);
+      --shadow: 0 8px 20px rgba(13, 20, 40, 0.2);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: var(--bg1);min-height:100vh;color:#06233a;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+      padding:40px;display:flex;align-items:center;justify-content:center;
+    }
+
+    .container{width:100%;max-width:1200px}
+
+    header{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;
+    }
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:64px;height:64px;border-radius:14px;background:rgba(255,255,255,0.25);display:grid;place-items:center;font-weight:700;color:white;box-shadow:var(--shadow)}
+    h1{margin:0;font-size:22px;color:white;letter-spacing:0.2px}
+    p.lead{margin:0;color:rgba(255,255,255,0.92);opacity:0.95}
+
+    .cart{background:var(--glass);padding:10px 14px;border-radius:12px;backdrop-filter:blur(6px);display:flex;gap:12px;align-items:center}
+    .cart .count{background:var(--accent);color:white;padding:6px 10px;border-radius:999px;font-weight:700}
+
+    main{display:grid;grid-template-columns:1fr 360px;gap:24px}
+
+    /* Productos */
+    .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+    .card{background:var(--card-grad);border-radius:16px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .card img{width:100%;height:140px;object-fit:cover;border-radius:12px}
+    .card h3{margin:10px 0 6px 0}
+    .price{font-weight:800;color:#0b3954}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,0.06);font-size:13px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:12px;background:#fff;border:none;cursor:pointer;font-weight:700;box-shadow:0 6px 14px rgba(11,57,84,0.12)}
+    .btn.accent{background:var(--accent);color:white}
+
+    /* Sidebar */
+    .sidebar{background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));padding:18px;border-radius:16px;box-shadow:var(--shadow)}
+    h2{margin:0 0 10px 0}
+    .package{border-radius:12px;padding:12px;margin-bottom:12px;background:linear-gradient(90deg,#ffffff,#f6fbff);display:flex;justify-content:space-between;align-items:center}
+
+    /* Carrito simple */
+    .cart-list{margin:12px 0}
+    .cart-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed rgba(0,0,0,0.06)}
+
+    /* Footer */
+    footer{margin-top:18px;color:#073048}
+
+    /* Responsive */
+    @media (max-width:900px){
+      main{grid-template-columns:1fr;}
+      .sidebar{order:2}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">DS</div>
+        <div>
+          <h1>La Sonrisa Store</h1>
+          <p class="lead">Productos dentales y paquetes con entrega en clínica</p>
+        </div>
+      </div>
+
+      <div class="cart" aria-live="polite">
+        <div style="text-align:right">
+          <small style="color:rgba(255,255,255,0.9);display:block">Tu carrito</small>
+          <strong style="color:white">Artículos seleccionados</strong>
+        </div>
+        <div class="count" id="cartCount">0</div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px">
+          <input id="search" placeholder="Buscar: cepillo, hilo, enjuague..." style="flex:1;padding:12px;border-radius:12px;border:none;box-shadow:0 6px 14px rgba(8,32,50,0.08)" />
+          <button class="btn" onclick="filterProducts()">Buscar</button>
+        </div>
+
+        <div class="products" id="products">
+          <!-- Cards insertadas por JS -->
+        </div>
+
+      </section>
+
+      <aside class="sidebar">
+        <h2>Paquetes destacados</h2>
+        <div class="package">
+          <div>
+            <strong>Pack Básico</strong>
+            <div style="font-size:13px;color:#556">Cepillo + Hilo dental</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800">$9.99</div>
+            <button class="btn" onclick="addPackage('Pack Básico',9.99)">Agregar</button>
+          </div>
+        </div>
+
+        <div class="package">
+          <div>
+            <strong>Pack Familiar</strong>
+            <div style="font-size:13px;color:#556">4 Cepillos + Enjuague</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800">$29.99</div>
+            <button class="btn" onclick="addPackage('Pack Familiar',29.99)">Agregar</button>
+          </div>
+        </div>
+
+        <div class="package">
+          <div>
+            <strong>Pack Premium</strong>
+            <div style="font-size:13px;color:#556">Cepillo sónico + Kit higiene</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800">$69.99</div>
+            <button class="btn" onclick="addPackage('Pack Premium',69.99)">Agregar</button>
+          </div>
+        </div>
+
+        <hr />
+        <h3>Resumen del carrito</h3>
+        <div class="cart-list" id="cartList">
+          <div style="font-size:13px;color:#445">(No hay artículos aún)</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+          <strong>Total:</strong>
+          <strong id="totalPrice">$0.00</strong>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:8px">
+          <button class="btn" onclick="checkout()">Pagar</button>
+          <button class="btn" onclick="clearCart()">Vaciar</button>
+        </div>
+
+        <footer>
+          <small>Entrega en clínica disponible. Consulta por suscripciones y descuentos.</small>
+        </footer>
+      </aside>
+    </main>
+  </div>
+
+  <template id="productTpl">
+    <div class="card">
+      <img src="" alt="producto" />
+      <h3></h3>
+      <div class="price"></div>
+      <div style="margin-top:10px;display:flex;justify-content:space-between;align-items:center">
+        <span class="tag"></span>
+        <div>
+          <button class="btn" onclick="addToCartFromCard(this)">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    const productsData = [
+      {id:1,name:'Cepillo Dental Classic',price:3.99,tag:'Manual',img:'https://source.unsplash.com/collection/190727/400x300?toothbrush'},
+      {id:2,name:'Cepillo Sónico Pro',price:49.99,tag:'Eléctrico',img:'https://source.unsplash.com/collection/190727/400x300?sonic'},
+      {id:3,name:'Hilo Dental 50m',price:2.49,tag:'Hilo',img:'https://source.unsplash.com/collection/190727/400x300?floss'},
+      {id:4,name:'Enjuague Bucal Fresh',price:6.99,tag:'Enjuague',img:'https://source.unsplash.com/collection/190727/400x300?mouthwash'},
+      {id:5,name:'Kit Higiene (3 piezas)',price:14.99,tag:'Kit',img:'https://source.unsplash.com/collection/190727/400x300?dentalkit'},
+      {id:6,name:'Cortaúñas y limpiador',price:4.99,tag:'Accesorio',img:'https://source.unsplash.com/collection/190727/400x300?tools'}
+    ];
+
+    const cart = [];
+
+    function formatPrice(v){return '$' + v.toFixed(2)}
+
+    function renderProducts(list){
+      const container = document.getElementById('products');container.innerHTML='';
+      const tpl = document.getElementById('productTpl');
+      list.forEach(p=>{
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('img').src = p.img;
+        node.querySelector('img').alt = p.name;
+        node.querySelector('h3').textContent = p.name;
+        node.querySelector('.price').textContent = formatPrice(p.price);
+        node.querySelector('.tag').textContent = p.tag;
+        node.querySelector('button').dataset.id = p.id;
+        node.querySelector('button').dataset.name = p.name;
+        node.querySelector('button').dataset.price = p.price;
+        container.appendChild(node);
+      })
+    }
+
+    function addToCartFromCard(btn){
+      const id = Number(btn.dataset.id);
+      const name = btn.dataset.name;
+      const price = Number(btn.dataset.price);
+      addToCart({id,name,price});
+    }
+
+    function addToCart(item){
+      const found = cart.find(c=>c.id===item.id);
+      if(found) found.qty++;
+      else cart.push({...item,qty:1});
+      updateCartUI();
+    }
+
+    function addPackage(name,price){
+      const id = 'pkg-' + name.replace(/\s+/g,'').toLowerCase();
+      addToCart({id,name,price});
+    }
+
+    function updateCartUI(){
+      document.getElementById('cartCount').textContent = cart.reduce((s,i)=>s+i.qty,0);
+      const list = document.getElementById('cartList');list.innerHTML='';
+      if(cart.length===0){list.innerHTML='<div style="font-size:13px;color:#445">(No hay artículos aún)</div>'}
+      cart.forEach(it=>{
+        const div = document.createElement('div');div.className='cart-item';
+        div.innerHTML = `<div>${it.name} x${it.qty}</div><div>${formatPrice(it.price*it.qty)}</div>`;
+        list.appendChild(div);
+      })
+      document.getElementById('totalPrice').textContent = formatPrice(cart.reduce((s,i)=>s+i.price*i.qty,0));
+    }
+
+    function clearCart(){cart.length=0;updateCartUI();}
+
+    function checkout(){
+      if(cart.length===0){alert('Tu carrito está vacío. Agrega productos antes de pagar.');return}
+      // Simulación de checkout: pedir nombre y correo
+      const nombre = prompt('Nombre para la orden:');
+      if(!nombre) return;
+      const email = prompt('Correo electrónico para recibir confirmación:');
+      if(!email) return;
+      alert('Gracias '+nombre+'! Tu pedido por ' + document.getElementById('totalPrice').textContent + ' fue recibido.\nTe contactaremos al: ' + email);
+      clearCart();
+    }
+
+    function filterProducts(){
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      if(!q){renderProducts(productsData);return}
+      const filtered = productsData.filter(p=> (p.name + ' ' + p.tag).toLowerCase().includes(q));
+      renderProducts(filtered);
+    }
+
+    // Init
+    renderProducts(productsData);
+    updateCartUI();
+  </script>
+</body>
+</html>
